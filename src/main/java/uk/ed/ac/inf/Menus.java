@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import com.google.gson.reflect.TypeToken;
 
 public class Menus {
-    private static final HttpClient client = HttpClient.newHttpClient();
+    private static final HttpClient client = HttpClient.newHttpClient();                            //Creat HTTP client must be static
     public String machine;
     public String port;
 
@@ -33,26 +33,28 @@ public class Menus {
      */
     public int getDeliveryCost(String... varStrings){
         int totalCost = 0;
-        String urlMenu = String.format("http://%s:%s/menus/menus.json", machine, port);
+        String urlMenu = String.format("http://%s:%s/menus/menus.json", machine, port);             //format address with given machine and port
         HttpResponse<String> response;
 
         try {
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(urlMenu)).build();
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            Type listType = new TypeToken<ArrayList<MenuObject>>() {}.getType();
-            ArrayList<MenuObject> jsonMenu = new Gson().fromJson(response.body(), listType);
-            for(String i: varStrings) {
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(urlMenu)).build();        //Create HTTP request
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());                  //Creat a response
+            Type listType = new TypeToken<ArrayList<MenuObject>>() {}.getType();                    //Create a tyoe token
+            ArrayList<MenuObject> jsonMenu = new Gson().fromJson(response.body(), listType);        //Creat turn string into object
+            for(String i: varStrings) {                                                             //For each given item
                 boolean broke = false;
-                for (MenuObject j : jsonMenu) {
-                    for (Item k : j.menu) {
-                        if (k.item.equals(i)){
-                            totalCost = totalCost + k.getPence();
-                            broke = true;
+                for (MenuObject j : jsonMenu) {                                                     //For each restuarant jsonMenu
+
+                    for (Item k : j.menu) {                                                         //For each ite in restuaurants menu
+
+                        if (k.item.equals(i)){                                                      //If item found
+                            totalCost = totalCost + k.getPence();                                   //Add cost to total
+                            broke = true;                                                           //break out of the loop to reduce redundant loops
                             break;
 
                         }
                     }
-                    if(broke){ break; }
+                    if(broke){ break; }                                                             //break back to move to next item to find
                 }
             }
         } catch (IOException e) {
@@ -62,7 +64,7 @@ public class Menus {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-            return totalCost + 50;
+            return totalCost + 50;                                                                  //Return total cost + delivery charge
         }
 
 
