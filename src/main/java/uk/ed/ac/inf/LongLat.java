@@ -21,8 +21,8 @@ public class LongLat {
     public LongLat(double givenLongitude, double givenLatitude){
         longitude = givenLongitude;
         latitude = givenLatitude;
-
     }
+
     /**
      * Checks if the drone is within the confinement area
      *
@@ -32,7 +32,6 @@ public class LongLat {
         boolean inConfineArea = false;
         boolean inLong = false;
         boolean inLat = false;
-
         if((longitude > MINLONG) && (longitude < MAXLONG)){                                              //Is drone in given longitude of the confinement area
             inLong = true;
         }
@@ -44,8 +43,8 @@ public class LongLat {
         }
         return  inConfineArea;
 
-
     }
+
     /**
      * Calculates the distance from drone to a given point(LongLat object)
      *
@@ -84,6 +83,4 @@ public class LongLat {
         return new LongLat(newLong, newLat);
 
     }
-
-
 }
