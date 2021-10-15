@@ -76,16 +76,12 @@ public class LongLat {
      */
     public LongLat nextPosition(int givenAngle){
         if (givenAngle == HOVERING){                                                                            //Dummy value to show the drone is hovering and keep longitude and latitude the same
-            LongLat newPosition = new LongLat(longitude, latitude);
-            return  newPosition;
+            return new LongLat(longitude, latitude);
         }
-
         double angleToRadians = Math.toRadians(givenAngle);                                                //Convert given angle to radians
         double newLong = longitude + ISCLOSEDIST * Math.cos(angleToRadians);                               //Calculate new longitude
         double newLat = latitude + ISCLOSEDIST * Math.sin(angleToRadians);                                 //Calculate new latitude
-        LongLat newPosition = new LongLat(newLong, newLat);
-        return  newPosition;
-
+        return new LongLat(newLong, newLat);
 
     }
 
