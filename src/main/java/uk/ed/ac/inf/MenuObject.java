@@ -7,13 +7,5 @@ public class MenuObject {
     String location;
     List<Item> menu;
 
-    /**
-     * Getter for menu
-     *
-     * @return menu
-     */
-    public List<Item> getMenu(){
-        return menu;
-    }
 
 }

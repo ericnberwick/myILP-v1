@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import com.google.gson.reflect.TypeToken;
 
 public class Menus {
-    private static final HttpClient client = HttpClient.newHttpClient();                            //Creat HTTP client must be static
+    private static final HttpClient client = HttpClient.newHttpClient();
+    private final static int DELIVERYCHARGE = 50;
     public String machine;
     public String port;
 
@@ -26,10 +27,10 @@ public class Menus {
 
     }
     /**
-     * Calculates the cost of given items including the delivery fee
+     * Calculates the cost of n given items including the delivery fee
      *
      * @param varStrings List of items
-     * @return the total cost of items including delivery cost
+     * @return the total cost of items in pence including delivery cost
      */
     public int getDeliveryCost(String... varStrings){
         int totalCost = 0;
@@ -39,32 +40,32 @@ public class Menus {
         try {
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(urlMenu)).build();        //Create HTTP request
             response = client.send(request, HttpResponse.BodyHandlers.ofString());                  //Creat a response
-            Type listType = new TypeToken<ArrayList<MenuObject>>() {}.getType();                    //Create a tyoe token
+            if(response.statusCode() != 200){
+                System.err.println("Error response failed");
+            }
+            Type listType = new TypeToken<ArrayList<MenuObject>>() {}.getType();                    //Create a type token if(response.statusCode()){}
             ArrayList<MenuObject> jsonMenu = new Gson().fromJson(response.body(), listType);        //Creat turn string into object
             for(String i: varStrings) {                                                             //For each given item
                 boolean broke = false;
-                for (MenuObject j : jsonMenu) {                                                     //For each restuarant jsonMenu
-
-                    for (Item k : j.menu) {                                                         //For each ite in restuaurants menu
-
+                for (MenuObject j : jsonMenu) {                                                     //For each restaurant jsonMenu
+                    for (Item k : j.menu) {                                                         //For each ite in restaurants menu
                         if (k.item.equals(i)){                                                      //If item found
-                            totalCost = totalCost + k.getPence();                                   //Add cost to total
-                            broke = true;                                                           //break out of the loop to reduce redundant loops
+                            totalCost = totalCost + k.pence;                                        //Add cost to total
+                            broke = true;                                                           //break out of the loop to eliminate redundant loops
                             break;
-
                         }
                     }
-                    if(broke){ break; }                                                             //break back to move to next item to find
+                    if(broke){break;}                                                               //break back to first loop and move on to find the next item
                 }
             }
-        } catch (IOException e) {
-            System.err.println("IO Exception Error");
+        } catch (IOException e) {                                                                   //Error handling check
+            System.err.println("IO Exception Error");                                               //response.statusCode() if 200 then good otherwise
         } catch (RuntimeException e) {
             System.err.println("Runtime Exception Error");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-            return totalCost + 50;                                                                  //Return total cost + delivery charge
+            return totalCost + DELIVERYCHARGE;                                                                  //Return total cost + delivery charge
         }
 
 
