@@ -1,4 +1,5 @@
 package uk.ed.ac.inf;
+import java.lang.Math;
 
 public class LongLat {
 
@@ -52,7 +53,9 @@ public class LongLat {
      * @return theDistance a (double) pythagorean distance between the drones position to LongLat object a
      */
     public double distanceTo(LongLat a){
-        return Math.sqrt(Math.pow((a.longitude - longitude),2) + Math.pow((a.latitude  - latitude),2));     //pythagorean distance formula
+        double x = a.longitude - longitude;
+        double y = a.latitude  - latitude;
+        return Math.hypot(x,y);
     }
 
     /**
@@ -66,7 +69,7 @@ public class LongLat {
     }
 
     /**
-     * Returns the new postion of drone after going at angle x a distance of y
+     * Returns the new position of drone after going at angle x a distance of y
      *
      * @param givenAngle Takes in an integer representing an angle
      * @return the drones new position after going the move distance at the given angle
