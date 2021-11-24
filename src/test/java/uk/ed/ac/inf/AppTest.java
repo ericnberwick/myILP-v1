@@ -3,6 +3,11 @@ package uk.ac.ed.inf;
 import org.junit.Test;
 import uk.ed.ac.inf.LongLat;
 import uk.ed.ac.inf.Menus;
+import uk.ed.ac.inf.noflyzone;
+import uk.ed.ac.inf.webConnection;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -14,6 +19,14 @@ public class AppTest {
     private final LongLat appletonTower = new LongLat(-3.186874, 55.944494);
     private final LongLat businessSchool = new LongLat(-3.1873,55.9430);
     private final LongLat greyfriarsKirkyard = new LongLat(-3.1928,55.9469);
+
+    @Test
+    public void myTest1(){
+        String geoStr = webConnection.getNoFlyString();
+        ArrayList<com.mapbox.geojson.Polygon> a = (ArrayList<com.mapbox.geojson.Polygon>) noflyzone.StringToGeoNoFly(geoStr);
+
+        System.out.println("the output is \n" +  a.get(0));
+    }
 
     @Test
     public void testIsConfinedTrueA(){
@@ -191,6 +204,8 @@ public class AppTest {
         // Don't forget the standard delivery charge of 50p
         assertEquals(4 * 460 + 50, totalCost);
     }
+
+
 
 
 }
