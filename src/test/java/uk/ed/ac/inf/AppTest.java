@@ -1,13 +1,12 @@
 package uk.ac.ed.inf;
 
+import com.mapbox.geojson.LineString;
 import org.junit.Test;
-import uk.ed.ac.inf.LongLat;
-import uk.ed.ac.inf.Menus;
-import uk.ed.ac.inf.noflyzone;
-import uk.ed.ac.inf.webConnection;
+import uk.ed.ac.inf.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -22,188 +21,61 @@ public class AppTest {
 
     @Test
     public void myTest1(){
-        String geoStr = webConnection.getNoFlyString();
-        ArrayList<com.mapbox.geojson.Polygon> a = (ArrayList<com.mapbox.geojson.Polygon>) noflyzone.StringToGeoNoFly(geoStr);
+        String dbString = "jdbc:derby://localhost:9876/derbyDB";
+        String date = "2022-02-02";
+        List<Orders> ords;
+        ords = Database.getOrder(dbString, date);
+        for(Orders x: ords){
+            System.out.println(x.orderNo);
+        }
+        Database.createDeliveries(dbString);
+        Database.createFlightPath(dbString);
+    }
 
-        System.out.println("the output is \n" +  a.get(0));
+    public void myTestNoFly(){
+        LongLat a = new LongLat(-3.186874,55.944494);
+        LongLat b = new LongLat(-3.1911,55.9456);
+        LongLat c = new LongLat(-3.1861, 55.9447);
+        LongLat d = new LongLat(-3.1862, 55.9457);
+        Boolean res = noflyzone.intersect(a,b,c,d);
+        System.out.println("They lines intersect and my function says this is" + res);
+        //System.out.println(PathFind.getPoly());
+        //System.out.println("\n");
+        //System.out.println(PathFind.getPoly().coordinates().get(0).get(0).coordinates());
     }
 
     @Test
-    public void testIsConfinedTrueA(){
-        assertTrue(appletonTower.isConfined());
+    public void testPath(){
+        String dbString = "jdbc:derby://localhost:9876/derbyDB";
+        String date = "2022-02-02";
+        List<Nodes> q = new ArrayList<>();
+        Nodes a = new Nodes();
+        a.cord = new LongLat(-3.1913,55.9456);
+        Nodes b = new Nodes();
+        b.cord = new LongLat(-3.1885,55.9440);
+        //System.out.println(nxt.h + nxt.g);
+        q = PathFind.findPath(b,a);
+        LineString lnStr = PathFind.getLineStr(q);
+        System.out.println(lnStr.toJson());
+
     }
+    /*
+    public void testThreewords(){
+        String dbString = "jdbc:derby://localhost:9876/derbyDB";
+        String date = "2022-02-02";
+        List<Orders> ords = Database.getOrder(dbString, date);
+        String machine = "localhost";
+        String port = "9898";
+        String three = webConnection.getShopLocation(ords.get(0), machine, port);
+        System.out.println("tt");
+        System.out.println(three);
+        //LongLat loc = webConnection.threeWordsToLongLat(three, machine, port);
+        //System.out.println(loc);
+        //System.out.println("The longitude is "+ loc.longitude + " the latutude is " + loc.latitude);
 
-    @Test
-    public void testIsConfinedTrueB(){
-        assertTrue(businessSchool.isConfined());
     }
+    */
 
-    @Test
-    public void testIsConfinedFalse(){
-        assertFalse(greyfriarsKirkyard.isConfined());
-    }
-
-    private boolean approxEq(double d1, double d2) {
-        return Math.abs(d1 - d2) < 1e-12;
-    }
-
-    @Test
-    public void testDistanceTo(){
-        double calculatedDistance = 0.0015535481968716011;
-        assertTrue(approxEq(appletonTower.distanceTo(businessSchool), calculatedDistance));
-    }
-
-    @Test
-    public void testCloseToTrue(){
-        LongLat alsoAppletonTower = new LongLat(-3.186767933982822, 55.94460006601717);
-        assertTrue(appletonTower.closeTo(alsoAppletonTower));
-    }
-
-
-    @Test
-    public void testCloseToFalse(){
-        assertFalse(appletonTower.closeTo(businessSchool));
-    }
-
-
-    private boolean approxEq(LongLat l1, LongLat l2) {
-        return approxEq(l1.longitude, l2.longitude) &&
-                approxEq(l1.latitude, l2.latitude);
-    }
-
-    @Test
-    public void testAngle0(){
-        LongLat nextPosition = appletonTower.nextPosition(0);
-        LongLat calculatedPosition = new LongLat(-3.186724, 55.944494);
-        assertTrue(approxEq(nextPosition, calculatedPosition));
-    }
-
-    @Test
-    public void testAngle20(){
-        LongLat nextPosition = appletonTower.nextPosition(20);
-        LongLat calculatedPosition = new LongLat(-3.186733046106882, 55.9445453030215);
-        assertTrue(approxEq(nextPosition, calculatedPosition));
-    }
-
-    @Test
-    public void testAngle50(){
-        LongLat nextPosition = appletonTower.nextPosition(50);
-        LongLat calculatedPosition = new LongLat(-3.186777581858547, 55.94460890666647);
-        assertTrue(approxEq(nextPosition, calculatedPosition));
-    }
-
-    @Test
-    public void testAngle90(){
-        LongLat nextPosition = appletonTower.nextPosition(90);
-        LongLat calculatedPosition = new LongLat(-3.186874, 55.944644);
-        assertTrue(approxEq(nextPosition, calculatedPosition));
-    }
-
-    @Test
-    public void testAngle140(){
-        LongLat nextPosition = appletonTower.nextPosition(140);
-        LongLat calculatedPosition = new LongLat(-3.1869889066664676, 55.94459041814145);
-        assertTrue(approxEq(nextPosition, calculatedPosition));
-    }
-
-    @Test
-    public void testAngle190(){
-        LongLat nextPosition = appletonTower.nextPosition(190);
-        LongLat calculatedPosition = new LongLat(-3.1870217211629517, 55.94446795277335);
-        assertTrue(approxEq(nextPosition, calculatedPosition));
-    }
-
-    @Test
-    public void testAngle260(){
-        LongLat nextPosition = appletonTower.nextPosition(260);
-        LongLat calculatedPosition = new LongLat(-3.18690004722665, 55.944346278837045);
-        assertTrue(approxEq(nextPosition, calculatedPosition));
-    }
-
-    @Test
-    public void testAngle300(){
-        LongLat nextPosition = appletonTower.nextPosition(300);
-        LongLat calculatedPosition = new LongLat(-3.186799, 55.94436409618943);
-        assertTrue(approxEq(nextPosition, calculatedPosition));
-    }
-
-    @Test
-    public void testAngle350(){
-        LongLat nextPosition = appletonTower.nextPosition(350);
-        LongLat calculatedPosition = new LongLat(-3.1867262788370483, 55.94446795277335);
-        assertTrue(approxEq(nextPosition, calculatedPosition));
-    }
-
-    @Test
-    public void testAngle999(){
-        // The special junk value -999 means "hover and do not change position"
-        LongLat nextPosition = appletonTower.nextPosition(-999);
-        assertTrue(approxEq(nextPosition, appletonTower));
-    }
-
-    @Test
-    public void testMenusOne() {
-        // The webserver must be running on port 9898 to run this test.
-        Menus menus = new Menus("localhost", "9898");
-        int totalCost = menus.getDeliveryCost(
-                "Ham and mozzarella Italian roll"
-        );
-        // Don't forget the standard delivery charge of 50p
-        assertEquals(230 + 50, totalCost);
-    }
-
-    @Test
-    public void testMenusTwo() {
-        // The webserver must be running on port 9898 to run this test.
-        Menus menus = new Menus("localhost", "9898");
-        int totalCost = menus.getDeliveryCost(
-                "Ham and mozzarella Italian roll",
-                "Salami and Swiss Italian roll"
-        );
-        // Don't forget the standard delivery charge of 50p
-        assertEquals(230 + 230 + 50, totalCost);
-    }
-
-    @Test
-    public void testMenusThree() {
-        // The webserver must be running on port 9898 to run this test.
-        Menus menus = new Menus("localhost", "9898");
-        int totalCost = menus.getDeliveryCost(
-                "Ham and mozzarella Italian roll",
-                "Salami and Swiss Italian roll",
-                "Flaming tiger latte"
-        );
-        // Don't forget the standard delivery charge of 50p
-        assertEquals(230 + 230 + 460 + 50, totalCost);
-    }
-
-    @Test
-    public void testMenusFourA() {
-        // The webserver must be running on port 9898 to run this test.
-        Menus menus = new Menus("localhost", "9898");
-        int totalCost = menus.getDeliveryCost(
-                "Ham and mozzarella Italian roll",
-                "Salami and Swiss Italian roll",
-                "Flaming tiger latte",
-                "Dirty matcha latte"
-        );
-        // Don't forget the standard delivery charge of 50p
-        assertEquals(230 + 230 + 460 + 460 + 50, totalCost);
-    }
-
-    @Test
-    public void testMenusFourB() {
-        // The webserver must be running on port 9898 to run this test.
-        Menus menus = new Menus("localhost", "9898");
-        int totalCost = menus.getDeliveryCost(
-                "Flaming tiger latte",
-                "Dirty matcha latte",
-                "Strawberry matcha latte",
-                "Fresh taro latte"
-        );
-        // Don't forget the standard delivery charge of 50p
-        assertEquals(4 * 460 + 50, totalCost);
-    }
 
 
 

@@ -3,8 +3,8 @@ import java.lang.Math;
 
 public class LongLat {
 
-    public final double longitude;
-    public final double latitude;
+    public double longitude;
+    public double latitude;
     private final static double MINLONG = -3.192473;
     private final static double MAXLONG = -3.184319;
     private final static double MINLAT = 55.942617;
