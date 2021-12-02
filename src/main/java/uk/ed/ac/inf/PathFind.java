@@ -10,9 +10,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PathFind {
-
     private final static double MOVEDISTANCE = 0.00015;
 
+    /**
+     * Find a flightpath from two locations while complying to flight constraints
+     * @param startNode
+     * @param target
+     * @return
+     */
     public static List<Nodes> findPath(Nodes startNode, Nodes target){
         List<Nodes> path = new ArrayList<>();
         List<Nodes> visited = new ArrayList<>();
@@ -42,6 +47,14 @@ public class PathFind {
         Collections.reverse(path);                                  //reverse the list
         return path;
     }
+
+    /**
+     * Assign each node a 'G' and 'H' value and add to open list
+     * @param newNode
+     * @param target
+     * @param open
+     * @return
+     */
     public static List<Nodes> getOpen(List<Nodes> newNode, Nodes target, List<Nodes> open){
         for(Nodes e: newNode){
             e.h = e.cord.distanceTo(target.cord);
@@ -51,6 +64,12 @@ public class PathFind {
         }
         return open;
     }
+
+    /**
+     * Find the next node with lowest F(g+h) value
+     * @param open
+     * @return
+     */
     public static Nodes nextNode(List<Nodes> open){
         Nodes bestF = open.get(0);
         for(Nodes n: open){
@@ -61,7 +80,11 @@ public class PathFind {
         return bestF;
     }
 
-
+    /**
+     * Find all possible nodes around a node
+     * @param currentNode
+     * @return
+     */
     public static List<Nodes> getNodes(Nodes currentNode){
         List<Nodes> expanded = new ArrayList<>();
         for(int i =0; i<=350; i+=10){
@@ -74,11 +97,20 @@ public class PathFind {
         return  expanded;
     }
 
+    /**
+     * Find out if a move is valid:
+     *  1) Not already been visited
+     *  2) Within confinement zone
+     *  3) Doesn't cross no fly zone
+     * @param a
+     * @param visited
+     * @param currNode
+     * @return
+     */
     public static Boolean isValid(Nodes a, List<Nodes> visited, Nodes currNode){
         if(!a.cord.isConfined()){
             return false;
         }
-
         for(Nodes x: visited){
             if(x.cord.closeTo(a.cord)){
                 return false;
@@ -87,7 +119,6 @@ public class PathFind {
         if(!doesntGoInNoFly(currNode, a)){
             return false;
         }
-
         return true;
     }
 
@@ -108,20 +139,32 @@ public class PathFind {
                     return false;
                 }
             }
-
         }
        return true;
+
     }
-    public static LineString getLineStr(List<Nodes> x){
+
+    /**
+     * Convert list of nodes ot LineString
+     * @param x
+     * @return
+     */
+    public static LineString getLineStr(List<Nodes> x){                                                                 //remove before submission
         List<Point> points = new ArrayList<>();
         for(Nodes i: x){
             Point a =Point.fromLngLat(i.cord.longitude,i.cord.latitude);
             points.add(a);
         }
-
         return LineString.fromLngLats(points);
     }
 
+    /**
+     * Find cost of order/number of moves of an order
+     * @param drone
+     * @param deliverTo
+     * @param shopLocs
+     * @return
+     */
     public static int orderMoveCost(Drone drone, LongLat deliverTo, List<LongLat> shopLocs){
         Nodes deliverToNode = Nodes.longLatToNode(deliverTo);
         Nodes appleNode = Nodes.longLatToNode(drone.home);
@@ -140,6 +183,5 @@ public class PathFind {
         shop1ToDeliverTo = shop1ToDeliverTo + (findPath(shop1,deliverToNode).size() -1);
         return droneToShop1 + shop1ToShop2 + shop2toDeliverTo + shop1ToDeliverTo + deliverLocToApple;
     }
-
 
 }

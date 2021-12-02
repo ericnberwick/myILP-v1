@@ -7,5 +7,4 @@ public class MenuObject {
     String location;
     List<Item> menu;
 
-
 }

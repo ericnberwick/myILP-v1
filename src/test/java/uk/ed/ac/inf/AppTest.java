@@ -57,8 +57,9 @@ public class AppTest {
         q = PathFind.findPath(b,a);
         LineString lnStr = PathFind.getLineStr(q);
         System.out.println(lnStr.toJson());
-
     }
+
+
     /*
     public void testThreewords(){
         String dbString = "jdbc:derby://localhost:9876/derbyDB";

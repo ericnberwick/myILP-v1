@@ -1,5 +1,4 @@
 package uk.ed.ac.inf;
-
 import java.util.List;
 
 public class what3word {
