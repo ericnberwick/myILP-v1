@@ -35,8 +35,8 @@ public class PathFind {
                     newNodes.add(e);                                                                                    //add it to new nodes list
                 }
             }
-            open = getOpen(newNodes, target, open, web_port);                                                           //Assign. each new node a 'G' and 'H' value and add to open list
-            currNode = nextNode(open, web_port);                                                                        //set the current node to the best node in open
+            open = getOpen(newNodes, target, open);                                                                     //Assign. each new node a 'G' and 'H' value and add to open list
+            currNode = nextNode(open);                                                                                  //set the current node to the best node in open
             open.remove(currNode);                                                                                      //remove that node from open list
             visited.addAll(newNodes);                                                                                   //add all nodes explored to visited
         }                                                                                                               //Repeat until we are closeTo target node
@@ -55,7 +55,7 @@ public class PathFind {
      * @param open
      * @return
      */
-    public static List<Nodes> getOpen(List<Nodes> newNode, Nodes target, List<Nodes> open, String web_port){
+    public static List<Nodes> getOpen(List<Nodes> newNode, Nodes target, List<Nodes> open){
         for(Nodes e: newNode){                                                                                          //for each node given
             e.h = e.cord.distanceTo(target.cord);                                                                       //Assign its h heuristic value the euclidean distance to target
             e.parentNo = e.parent.parentNo + 1;                                                                         //Assign its number of parents value to itself + 1
@@ -70,7 +70,7 @@ public class PathFind {
      * @param open
      * @return
      */
-    public static Nodes nextNode(List<Nodes> open, String web_port){
+    public static Nodes nextNode(List<Nodes> open){
         Nodes bestF = open.get(0);
         for(Nodes n: open){                                                                                             //for each node given
             if((n.g + n.h)<(bestF.g + bestF.h)){                                                                        //If its F values is better (lower) than current best
@@ -149,7 +149,7 @@ public class PathFind {
      * @param x
      * @return
      */
-    public static LineString getLineStr(List<Nodes> x, String web_port){                                                                 //remove before submission
+    public static LineString getLineStr(List<Nodes> x){                                                                 //remove before submission
         List<Point> points = new ArrayList<>();
         for(Nodes i: x){
             Point a =Point.fromLngLat(i.cord.longitude,i.cord.latitude);

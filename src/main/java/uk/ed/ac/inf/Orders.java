@@ -65,7 +65,7 @@ public class Orders {
                 int batteryUsed = 0;                                                                                    //Initialise variable to track battery usage of order
                 Nodes initPosition = Nodes.longLatToNode(drone.position);
                 Nodes shop1 = Nodes.longLatToNode(shops.get(0));
-                List<Nodes> path1 = PathFind.findPath(initPosition,shop1, web_port);                                              //Find flightpath to shop 1
+                List<Nodes> path1 = PathFind.findPath(initPosition,shop1, web_port);                                    //Find flightpath to shop 1
                 Database.writeFlightPath(path1, ord.orderNo, dbString);                                                 //Write the flightpath to the DB
                 batteryUsed = batteryUsed + (path1.size()-1);                                                           //Update battery usage
                 drone.position = shops.get(0);                                                                          //Move drone position to the shop

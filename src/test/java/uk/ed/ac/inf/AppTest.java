@@ -56,7 +56,7 @@ public class AppTest {
         //System.out.println(nxt.h + nxt.g);
         String web_port = "9898";
         q = PathFind.findPath(b,a, web_port);
-        LineString lnStr = PathFind.getLineStr(q, web_port);
+        LineString lnStr = PathFind.getLineStr(q);
         System.out.println(lnStr.toJson());
     }
 

@@ -32,13 +32,13 @@ public class LongLat {
         boolean inConfineArea = false;
         boolean inLong = false;
         boolean inLat = false;
-        if((longitude > MINLONG) && (longitude < MAXLONG)){                                              //Is drone in given longitude of the confinement area
+        if((longitude > MINLONG) && (longitude < MAXLONG)){                                                             //Is drone in given longitude of the confinement area
             inLong = true;
         }
-        if((latitude > MINLAT) && (latitude < MAXLAT)){                                                //Is drone in given latitude of the confinement area
+        if((latitude > MINLAT) && (latitude < MAXLAT)){                                                                 //Is drone in given latitude of the confinement area
             inLat = true;
         }
-        if(inLong & inLat){                                                                                  //Is drone in the confinement area
+        if(inLong & inLat){                                                                                             //Is drone in the confinement area
             inConfineArea = true;
         }
         return  inConfineArea;
@@ -64,7 +64,7 @@ public class LongLat {
      * @return true if the drone is close to LongLat object b
      */
     public boolean closeTo(LongLat b){
-        return distanceTo(b) < ISCLOSEDIST;                                                                    //0.00015 is the tolerance specified to be close to a location
+        return distanceTo(b) < ISCLOSEDIST;                                                                             //0.00015 is the tolerance specified to be close to a location
     }
 
     /**
@@ -74,12 +74,12 @@ public class LongLat {
      * @return the drones new position after going the move distance at the given angle
      */
     public LongLat nextPosition(int givenAngle){
-        if (givenAngle == HOVERING){                                                                            //Dummy value to show the drone is hovering and keep longitude and latitude the same
+        if (givenAngle == HOVERING){                                                                                    //Dummy value to show the drone is hovering and keep longitude and latitude the same
             return new LongLat(longitude, latitude);
         }
-        double angleToRadians = Math.toRadians(givenAngle);                                                //Convert given angle to radians
-        double newLong = longitude + ISCLOSEDIST * Math.cos(angleToRadians);                               //Calculate new longitude
-        double newLat = latitude + ISCLOSEDIST * Math.sin(angleToRadians);                                 //Calculate new latitude
+        double angleToRadians = Math.toRadians(givenAngle);                                                             //Convert given angle to radians
+        double newLong = longitude + ISCLOSEDIST * Math.cos(angleToRadians);                                            //Calculate new longitude
+        double newLat = latitude + ISCLOSEDIST * Math.sin(angleToRadians);                                              //Calculate new latitude
         return new LongLat(newLong, newLat);
 
     }

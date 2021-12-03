@@ -14,8 +14,8 @@ public class Nodes {
      * @return
      */
     public static Nodes longLatToNode(LongLat a){
-        Nodes b = new Nodes();
-        b.cord = new LongLat(a.longitude, a.latitude);
-        return b;
+        Nodes b = new Nodes();                                                                                          //Create node object
+        b.cord = new LongLat(a.longitude, a.latitude);                                                                  //Assign node LongLat field to given LongLat
+        return b;                                                                                                       //Return a node
     }
 }
