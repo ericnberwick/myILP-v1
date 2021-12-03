@@ -10,8 +10,8 @@ public class Nodes {
 
     /**
      * Convert LongLat object to Nodes object
-     * @param a
-     * @return
+     * @param a givne long loat
+     * @return Node Converted LongLat object
      */
     public static Nodes longLatToNode(LongLat a){
         Nodes b = new Nodes();                                                                                          //Create node object

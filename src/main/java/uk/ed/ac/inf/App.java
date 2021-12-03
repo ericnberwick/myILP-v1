@@ -5,7 +5,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class App {
-
+    /**
+     * Contruction of the application
+     * @param args
+     */
     public static void main(String[] args) {
         Drone drone = new Drone();
         drone.position = drone.home;                                                                                    //Drone starts from appleton
@@ -15,8 +18,8 @@ public class App {
         String year = args[2];
         String web_port = args[3];
         String db_port = args[4];
-        String dbString = String.format("jdbc:derby://localhost:%s/derbyDB", db_port);
-        String dbDate= String.format("%s-%s-%s", year,month,day);
+        String dbString = String.format("jdbc:derby://localhost:%s/derbyDB", db_port);                                  //format dbString with given arguments
+        String dbDate= String.format("%s-%s-%s", year,month,day);                                                       //format date with given arguments
         Database.createDeliveries(dbString);                                                                            //Create deliveries table in the Database
         Database.createFlightPath(dbString);                                                                            //Create flightpath table in the Database
         List<Orders> listOfOrders = Database.getOrder(dbString, dbDate);                                                //Get orders of given day

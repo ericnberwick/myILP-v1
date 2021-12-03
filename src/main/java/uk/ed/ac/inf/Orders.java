@@ -14,11 +14,11 @@ public class Orders {
     /**
      * Sort orders in order to maximise profit
      * Each orders value is determined by the total cost of the order
-     * @param listOfOrders
-     * @param dbString
-     * @param machine
-     * @param web_port
-     * @return
+     * @param listOfOrders List of Orders
+     * @param dbString URL of database as string
+     * @param machine localhost as String
+     * @param web_port string port of webserver
+     * @return List of orders in the optimal order
      */
     public static List<Orders> sortBest(List<Orders> listOfOrders, String dbString, String machine, String web_port){
         List<Orders> bestOrder = new ArrayList<>();
@@ -44,10 +44,10 @@ public class Orders {
 
     /**
      * Deliver the given orders for the day
-     * @param drone
-     * @param web_port
-     * @param dbString
-     * @param listOfOrders
+     * @param drone Drone object
+     * @param web_port web port given
+     * @param dbString URL of database
+     * @param listOfOrders List of orders to be delivered
      */
     public static void deliverOrders(Drone drone, String web_port, String dbString, List<Orders> listOfOrders) {
         for(Orders ord: listOfOrders) {                                                                                 //For each order

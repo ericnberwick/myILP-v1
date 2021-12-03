@@ -10,8 +10,8 @@ import java.util.List;
 public class Database {
     /**
      *Get all the orders for the given date
-     * @param dbString
-     * @param date
+     * @param dbString This is the URL of the database
+     * @param date date given from command line
      * @return List of Orders
      */
     public static List<Orders> getOrder(String dbString, String date){
@@ -38,8 +38,8 @@ public class Database {
 
     /**
      *For a given order(identified by its orderNo) return the items the order contains
-     * @param orderNo
-     * @param dbString
+     * @param orderNo Unique number of an order
+     * @param dbString This is the URL of the database
      * @return List of items of an order
      */
     public static List<Item> getOrderDetails(String orderNo, String dbString){
@@ -64,7 +64,7 @@ public class Database {
     /**
      * Add deliveries table to Database
      * Check if a deliveries table exists if it does drop it so no SQL errors occur
-     * @param dbString
+     * @param dbString This is the URL of the database
      */
     public static void createDeliveries(String dbString){
         try{
@@ -89,7 +89,7 @@ public class Database {
     /**
      * Create flightpath table in database
      * If a flightpath table already exists drop it to ensure no SQL errors occur
-     * @param dbString
+     * @param dbString This is the URL of the database
      */
     public static void createFlightPath(String dbString){
         try{
@@ -114,9 +114,9 @@ public class Database {
     }
     /**
      * Write a flightpath given as a list of node to the flightpath table in the database
-     * @param flightpath
-     * @param orderNo
-     * @param db_string
+     * @param flightpath a list of nodes making a path
+     * @param orderNo unique string of order
+     * @param db_string This is the URL of the database as a string
      */
     public static void writeFlightPath(List<Nodes> flightpath, String orderNo, String db_string){
         for(int i=0; i<flightpath.size()-1; i++){                                                                       //Repeat for length of list -1 (As last node will not go to anywhere)
@@ -130,10 +130,10 @@ public class Database {
     }
     /**
      * Add order to deliveries table in database
-     * @param orderNo
-     * @param deliveredTo
-     * @param cost
-     * @param jdbcString
+     * @param orderNo unique string of order
+     * @param deliveredTo String what3words address
+     * @param cost int in pence
+     * @param jdbcString This is the URL of the database as a string
      */
     public static void updateDeliveries(String orderNo, String deliveredTo, int cost, String jdbcString){
         try{
@@ -150,13 +150,13 @@ public class Database {
 
     /**
      * Add a single move to flightpath table in database
-     * @param orderNo
-     * @param fromLong
-     * @param fromLat
-     * @param angle
-     * @param toLong
-     * @param toLat
-     * @param jdbcString
+     * @param orderNo String of what order move was made in
+     * @param fromLong Double
+     * @param fromLat Double
+     * @param angle int
+     * @param toLong Double
+     * @param toLat Double
+     * @param jdbcString This is the URL of the database as a string
      */
     public static void UpdateFlightpath(String orderNo, double fromLong, double fromLat, int angle, Double toLong, Double toLat, String jdbcString){
         try{
@@ -177,10 +177,10 @@ public class Database {
     /**
      * Add hover flightpath table in database
      * use the dummy -999 value to indicate drone is hovering
-     * @param orderNo
-     * @param p1
-     * @param q1
-     * @param dbString
+     * @param orderNo String identifying an order
+     * @param p1 drones longitude
+     * @param q1 drone latitude
+     * @param dbString This is the URL of the database as a string
      */
     public static void hover(String orderNo, Double p1, Double q1, String dbString){
         Database.UpdateFlightpath(orderNo, p1,q1, -999, p1, q1, dbString);                                        //Write hover move to flightpath table in database
@@ -189,8 +189,8 @@ public class Database {
     /**
      * Create geojson file of flightpath for drones path for the day from the flightpath table in the database
      * file will be created in the current directory
-     * @param dbString
-     * @param date
+     * @param dbString This is the URL of the database as a string
+     * @param date date given as string
      */
     public static void createGSON(String dbString, String date){
         List<Point> points = new ArrayList<>();

@@ -11,10 +11,10 @@ public class noflyzone {
 
     /**
      * Check if two lines intersect
-     * @param p1
-     * @param q1
-     * @param p2
-     * @param q2
+     * @param p1 line 1 point 1
+     * @param q1 line 1 point 2
+     * @param p2 line 2 point 1
+     * @param q2 line 2 point 2
      * @return
      */
     public static boolean intersect(LongLat p1, LongLat q1, LongLat p2, LongLat q2){

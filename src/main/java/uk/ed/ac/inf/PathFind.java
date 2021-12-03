@@ -14,9 +14,9 @@ public class PathFind {
 
     /**
      * Find a flightpath from two locations while complying to flight constraints
-     * @param startNode
-     * @param target
-     * @return
+     * @param startNode Nodes a
+     * @param target nodes b
+     * @return List of nodes which is the shortest path
      */
     public static List<Nodes> findPath(Nodes startNode, Nodes target, String web_port){
         List<Nodes> path = new ArrayList<>();
@@ -50,10 +50,10 @@ public class PathFind {
 
     /**
      * Assign each node a 'G' and 'H' value and add to open list
-     * @param newNode
-     * @param target
-     * @param open
-     * @return
+     * @param newNode list of nodes
+     * @param target target node used for heuristic calculation
+     * @param open list of open nodes
+     * @return list of open nodes
      */
     public static List<Nodes> getOpen(List<Nodes> newNode, Nodes target, List<Nodes> open){
         for(Nodes e: newNode){                                                                                          //for each node given
@@ -67,8 +67,8 @@ public class PathFind {
 
     /**
      * Find the next node with lowest F(g+h) value
-     * @param open
-     * @return
+     * @param open list of nodes open currently
+     * @return Best node
      */
     public static Nodes nextNode(List<Nodes> open){
         Nodes bestF = open.get(0);
@@ -82,8 +82,8 @@ public class PathFind {
 
     /**
      * Find all possible nodes around a node
-     * @param currentNode
-     * @return
+     * @param currentNode Current position
+     * @return All nodes around it that it can move to
      */
     public static List<Nodes> getNodes(Nodes currentNode){
         List<Nodes> expanded = new ArrayList<>();
@@ -102,10 +102,10 @@ public class PathFind {
      *  1) Not already been visited
      *  2) Within confinement zone
      *  3) Doesn't cross no fly zone
-     * @param a
-     * @param visited
-     * @param currNode
-     * @return
+     * @param a Node
+     * @param visited list of nodes that have been visited
+     * @param currNode current node
+     * @return true if its valid
      */
     public static Boolean isValid(Nodes a, List<Nodes> visited, Nodes currNode, String web_port){
         if(!a.cord.isConfined()){                                                                                       //Is drone in the confienment area
@@ -122,6 +122,13 @@ public class PathFind {
         return true;
     }
 
+    /**
+     * Check if move goes in no fly zone
+     * @param a from
+     * @param b to
+     * @param web_port web port
+     * @return true if it doesn't go in no fly
+     */
     public static boolean doesntGoInNoFly(Nodes a, Nodes b, String web_port){
         LongLat r = new LongLat(a.cord.longitude, a.cord.latitude);                                                     //Move equals line from point r to s
         LongLat s = new LongLat(b.cord.longitude, b.cord.latitude);
@@ -146,8 +153,8 @@ public class PathFind {
 
     /**
      * Convert list of nodes ot LineString
-     * @param x
-     * @return
+     * @param x given a path
+     * @return Linestring converted path
      */
     public static LineString getLineStr(List<Nodes> x){                                                                 //remove before submission
         List<Point> points = new ArrayList<>();
@@ -160,10 +167,10 @@ public class PathFind {
 
     /**
      * Find cost of order/number of moves of an order
-     * @param drone
-     * @param deliverTo
-     * @param shopLocs
-     * @return
+     * @param drone drone object
+     * @param deliverTo what3words address
+     * @param shopLocs list of shops locations
+     * @return cost of order
      */
     public static int orderMoveCost(Drone drone, LongLat deliverTo, List<LongLat> shopLocs, String web_port){
         Nodes deliverToNode = Nodes.longLatToNode(deliverTo);

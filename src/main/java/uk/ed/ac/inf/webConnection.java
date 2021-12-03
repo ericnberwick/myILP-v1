@@ -43,9 +43,9 @@ public class webConnection {
     /**
      * Convert a what3words location to LongLat object
      * Use the webserver to find the coordinates of a what3words address
-     * @param threewords
-     * @param machine
-     * @param port
+     * @param threewords String
+     * @param machine String localhost
+     * @param port String webport
      * @return LongLat object of the corresponding what3words address
      */
     public static LongLat threeWordsToLongLat(String threewords, String machine, String port){
@@ -77,9 +77,9 @@ public class webConnection {
     /**
      * Get shop location of item
      * find the item in webserver of a in menu then find location of that item
-     * @param order
-     * @param machine
-     * @param port
+     * @param order string order
+     * @param machine local host
+     * @param port webport
      * @return what3words String of shop location
      */
     public static String getShopLocation(String order, String machine, String port){
