@@ -175,7 +175,7 @@ public class Database {
     }
 
     /**
-     * Add hover flightpath to database
+     * Add hover flightpath table in database
      * use the dummy -999 value to indicate drone is hovering
      * @param orderNo
      * @param p1
