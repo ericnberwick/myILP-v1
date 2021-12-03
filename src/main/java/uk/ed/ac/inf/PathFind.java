@@ -18,7 +18,7 @@ public class PathFind {
      * @param target
      * @return
      */
-    public static List<Nodes> findPath(Nodes startNode, Nodes target){
+    public static List<Nodes> findPath(Nodes startNode, Nodes target, String web_port){
         List<Nodes> path = new ArrayList<>();
         List<Nodes> visited = new ArrayList<>();
         List<Nodes> open= new ArrayList<>();
@@ -26,25 +26,25 @@ public class PathFind {
         currNode.parent = null;
         currNode.parentNo = 0;
         visited.add(currNode);
-        while(!(currNode.cord.closeTo(target.cord))){               //while we are not at the target
-            List<Nodes> newNodes = new ArrayList<>();               //each iteration create new nodes
-            List<Nodes> possibleNodes = getNodes(currNode);         //get possible nodes
-            for(Nodes e: possibleNodes){                            //for each possible node
-                if(isValid(e, visited, currNode)){                            //Check if it's a valid move: 1) not been visited 2) In confinement 3)Does not cross no-fly-zone
-                    e.parent = currNode;                            //if it is valid set the parent to the current
-                    newNodes.add(e);                                //add it to new nodes list
+        while(!(currNode.cord.closeTo(target.cord))){                                                                   //while we are not at the target
+            List<Nodes> newNodes = new ArrayList<>();                                                                   //each iteration create new nodes
+            List<Nodes> possibleNodes = getNodes(currNode);                                                             //get possible nodes
+            for(Nodes e: possibleNodes){                                                                                //for each possible node
+                if(isValid(e, visited, currNode, web_port)){                                                            //Check if it's a valid move: 1) not been visited 2) In confinement 3)Does not cross no-fly-zone
+                    e.parent = currNode;                                                                                //if it is valid set the parent to the current
+                    newNodes.add(e);                                                                                    //add it to new nodes list
                 }
             }
-            open = getOpen(newNodes, target, open);                 //Assign. each new node a 'G' and 'H' value and add to open list
-            currNode = nextNode(open);                              //set the current node to the best node in open
-            open.remove(currNode);                                  //remove that node from open list
-            visited.addAll(newNodes);                               //add all nodes explored to visited
-        }                                                           //Repeat until we are closeTo target node
-        while(currNode.parent != null) {                            //now the current node is the target
-            path.add(currNode);                                     //add current node to the path
-            currNode = currNode.parent;                             //set current node to the previous/parent node
-        }                                                           //repeat until at first node i.e which has no parent
-        Collections.reverse(path);                                  //reverse the list
+            open = getOpen(newNodes, target, open, web_port);                                                           //Assign. each new node a 'G' and 'H' value and add to open list
+            currNode = nextNode(open, web_port);                                                                        //set the current node to the best node in open
+            open.remove(currNode);                                                                                      //remove that node from open list
+            visited.addAll(newNodes);                                                                                   //add all nodes explored to visited
+        }                                                                                                               //Repeat until we are closeTo target node
+        while(currNode.parent != null) {                                                                                //now the current node is the target
+            path.add(currNode);                                                                                         //add current node to the path
+            currNode = currNode.parent;                                                                                 //set current node to the previous/parent node
+        }                                                                                                               //repeat until at first node i.e which has no parent
+        Collections.reverse(path);                                                                                      //reverse the list
         return path;
     }
 
@@ -55,12 +55,12 @@ public class PathFind {
      * @param open
      * @return
      */
-    public static List<Nodes> getOpen(List<Nodes> newNode, Nodes target, List<Nodes> open){
-        for(Nodes e: newNode){
-            e.h = e.cord.distanceTo(target.cord);
-            e.parentNo = e.parent.parentNo + 1;
-            e.g = MOVEDISTANCE * e.parentNo;
-            open.add(e);
+    public static List<Nodes> getOpen(List<Nodes> newNode, Nodes target, List<Nodes> open, String web_port){
+        for(Nodes e: newNode){                                                                                          //for each node given
+            e.h = e.cord.distanceTo(target.cord);                                                                       //Assign its h heuristic value the euclidean distance to target
+            e.parentNo = e.parent.parentNo + 1;                                                                         //Assign its number of parents value to itself + 1
+            e.g = MOVEDISTANCE * e.parentNo;                                                                            //Assign its g value the distance travelled (Number of parents * 0.00015)
+            open.add(e);                                                                                                //Add to open list
         }
         return open;
     }
@@ -70,11 +70,11 @@ public class PathFind {
      * @param open
      * @return
      */
-    public static Nodes nextNode(List<Nodes> open){
+    public static Nodes nextNode(List<Nodes> open, String web_port){
         Nodes bestF = open.get(0);
-        for(Nodes n: open){
-            if((n.g + n.h)<(bestF.g + bestF.h)){
-                bestF = n;
+        for(Nodes n: open){                                                                                             //for each node given
+            if((n.g + n.h)<(bestF.g + bestF.h)){                                                                        //If its F values is better (lower) than current best
+                bestF = n;                                                                                              //Then set it to the new best node to explore
             }
         }
         return bestF;
@@ -87,12 +87,12 @@ public class PathFind {
      */
     public static List<Nodes> getNodes(Nodes currentNode){
         List<Nodes> expanded = new ArrayList<>();
-        for(int i =0; i<=350; i+=10){
-            Nodes node = new Nodes();
-            node.cord = currentNode.cord.nextPosition(i);
-            node.angle = i;
-            node.parent = currentNode;
-            expanded.add(node);
+        for(int i =0; i<=350; i+=10){                                                                                   //for every angle it can travel (0,10,20...,340,350)
+            Nodes node = new Nodes();                                                                                   //Create a new node
+            node.cord = currentNode.cord.nextPosition(i);                                                               //Set its position to 0.00015 towards direction i
+            node.angle = i;                                                                                             //set angle to i
+            node.parent = currentNode;                                                                                  //Set parent node to node it came from which is the current node
+            expanded.add(node);                                                                                         //Add to return list
         }
         return  expanded;
     }
@@ -107,35 +107,35 @@ public class PathFind {
      * @param currNode
      * @return
      */
-    public static Boolean isValid(Nodes a, List<Nodes> visited, Nodes currNode){
-        if(!a.cord.isConfined()){
+    public static Boolean isValid(Nodes a, List<Nodes> visited, Nodes currNode, String web_port){
+        if(!a.cord.isConfined()){                                                                                       //Is drone in the confienment area
             return false;
         }
-        for(Nodes x: visited){
+        for(Nodes x: visited){                                                                                          //Has the node been visited before
             if(x.cord.closeTo(a.cord)){
                 return false;
             }
         }
-        if(!doesntGoInNoFly(currNode, a)){
+        if(!doesntGoInNoFly(currNode, a, web_port)){                                                                    //Does the node mean we cross any building in the no fly zone
             return false;
         }
         return true;
     }
 
-    public static boolean doesntGoInNoFly(Nodes a, Nodes b){
-        LongLat r = new LongLat(a.cord.longitude, a.cord.latitude);
+    public static boolean doesntGoInNoFly(Nodes a, Nodes b, String web_port){
+        LongLat r = new LongLat(a.cord.longitude, a.cord.latitude);                                                     //Move equals line from point r to s
         LongLat s = new LongLat(b.cord.longitude, b.cord.latitude);
-        String source = webConnection.getNoFlyString();
-        FeatureCollection fc = FeatureCollection.fromJson(source);
+        String source = webConnection.getNoFlyString(web_port);
+        FeatureCollection fc = FeatureCollection.fromJson(source);                                                      //Get no fly zone from the webserver
         List<Feature> f = fc.features();
-        for(Feature ftr: f){
+        for(Feature ftr: f){                                                                                            //For every building
             Geometry g = ftr.geometry();
             Polygon p = ((Polygon)g);
             List<Point> lst = (p.coordinates().get(0));
-            for (int i = 0; i < lst.size() - 1; i++) {
+            for (int i = 0; i < lst.size() - 1; i++) {                                                                  //For every line in the building
                 LongLat c = new LongLat(lst.get(i).coordinates().get(0), lst.get(i).coordinates().get(1));
                 LongLat d = new LongLat(lst.get(i+1).coordinates().get(0), lst.get(i+1).coordinates().get(1));
-                if(noflyzone.intersect(r,s,c,d)){
+                if(noflyzone.intersect(r,s,c,d)){                                                                       //Does the given move intersect line in building
                     return false;
                 }
             }
@@ -149,7 +149,7 @@ public class PathFind {
      * @param x
      * @return
      */
-    public static LineString getLineStr(List<Nodes> x){                                                                 //remove before submission
+    public static LineString getLineStr(List<Nodes> x, String web_port){                                                                 //remove before submission
         List<Point> points = new ArrayList<>();
         for(Nodes i: x){
             Point a =Point.fromLngLat(i.cord.longitude,i.cord.latitude);
@@ -165,7 +165,7 @@ public class PathFind {
      * @param shopLocs
      * @return
      */
-    public static int orderMoveCost(Drone drone, LongLat deliverTo, List<LongLat> shopLocs){
+    public static int orderMoveCost(Drone drone, LongLat deliverTo, List<LongLat> shopLocs, String web_port){
         Nodes deliverToNode = Nodes.longLatToNode(deliverTo);
         Nodes appleNode = Nodes.longLatToNode(drone.home);
         Nodes shop1 = Nodes.longLatToNode(shopLocs.get(0));
@@ -173,14 +173,14 @@ public class PathFind {
         int shop1ToShop2 = 0;
         int shop2toDeliverTo = 0;
         int shop1ToDeliverTo = 0;
-        int deliverLocToApple = (PathFind.findPath(deliverToNode,appleNode)).size() - 1 ;
-        int droneToShop1 = findPath(initPos, shop1).size() -1;
+        int deliverLocToApple = (PathFind.findPath(deliverToNode,appleNode, web_port)).size() - 1 ;
+        int droneToShop1 = findPath(initPos, shop1, web_port).size() -1;
         if(shopLocs.size() > 1){
             Nodes shop2 = Nodes.longLatToNode(shopLocs.get(1));
-            shop1ToShop2 = shop1ToShop2 + (findPath(shop1, shop2).size() -1);
-            shop2toDeliverTo = shop2toDeliverTo + (findPath(shop2, deliverToNode).size() -1);
+            shop1ToShop2 = shop1ToShop2 + (findPath(shop1, shop2, web_port).size() -1);
+            shop2toDeliverTo = shop2toDeliverTo + (findPath(shop2, deliverToNode, web_port).size() -1);
         }
-        shop1ToDeliverTo = shop1ToDeliverTo + (findPath(shop1,deliverToNode).size() -1);
+        shop1ToDeliverTo = shop1ToDeliverTo + (findPath(shop1,deliverToNode, web_port).size() -1);
         return droneToShop1 + shop1ToShop2 + shop2toDeliverTo + shop1ToDeliverTo + deliverLocToApple;
     }
 

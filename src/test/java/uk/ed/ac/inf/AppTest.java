@@ -54,8 +54,9 @@ public class AppTest {
         Nodes b = new Nodes();
         b.cord = new LongLat(-3.1885,55.9440);
         //System.out.println(nxt.h + nxt.g);
-        q = PathFind.findPath(b,a);
-        LineString lnStr = PathFind.getLineStr(q);
+        String web_port = "9898";
+        q = PathFind.findPath(b,a, web_port);
+        LineString lnStr = PathFind.getLineStr(q, web_port);
         System.out.println(lnStr.toJson());
     }
 
